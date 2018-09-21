@@ -1,5 +1,8 @@
 package com.durga.balaji66.multiplechoicequestins;
 
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -30,17 +33,19 @@ public class MainActivity extends AppCompatActivity  implements View.OnClickList
         initializeListeners();
         ModelList item =arrList.get(0);
         mQuestion.setText(item.getmQuestion());
+        resultList.clear();
+        countList.clear();
         mA.setText(item.getmOption_A());
         mB.setText(item.getmOption_B());
         mC.setText(item.getmOption_C());
         mD.setText(item.getmOption_D());
-        mA.setBackgroundColor(getResources().getColor(R.color.colorSilver));
-        mB.setBackgroundColor(getResources().getColor(R.color.colorSilver));
-        mC.setBackgroundColor(getResources().getColor(R.color.colorSilver));
-        mD.setBackgroundColor(getResources().getColor(R.color.colorSilver));
+        mA.setBackgroundColor(getResources().getColor(R.color.colorLiteBlue));
+        mB.setBackgroundColor(getResources().getColor(R.color.colorLiteBlue));
+        mC.setBackgroundColor(getResources().getColor(R.color.colorLiteBlue));
+        mD.setBackgroundColor(getResources().getColor(R.color.colorLiteBlue));
         mSubmit.setVisibility(View.GONE);
         mNext.setVisibility(View.VISIBLE);
-        Toast.makeText(getApplicationContext(),String.valueOf(arrList.size()),Toast.LENGTH_LONG).show();
+        //Toast.makeText(getApplicationContext(),String.valueOf(arrList.size()),Toast.LENGTH_LONG).show();
     }
     public void initializeViews() {
         mQuestion =findViewById(R.id.textViewQuestion);
@@ -66,7 +71,7 @@ public class MainActivity extends AppCompatActivity  implements View.OnClickList
         arrList.add(1, new ModelList("Whats Your State ?","Karnataka ","Andhra Pradesh", "Maharastra","Kerala","Andhra Pradesh"));
         arrList.add(2, new ModelList("Whats Your Qualification ?","BCA","BSC", "CA","MCA","MCA"));
         arrList.add(3, new ModelList("Whats Your Mother Tongue ?","Kanada ","Telugu", "Tamil","Bhojpuri","Telugu"));
-        arrList.add(4, new ModelList("Whats Your Mother Tongue ?","Telugu ","Kanada", "Tamil","Bhojpuri","Telugu"));
+        arrList.add(4, new ModelList("Whats Your Mother Tongue ?","Telugu ","Kanada", "Tamil","Bhojpuri","Kanada"));
 
     }
     public void showQuestions()
@@ -125,14 +130,14 @@ public class MainActivity extends AppCompatActivity  implements View.OnClickList
                     resultList.add(list);
                 }
 
-                Toast.makeText(getApplicationContext(),resultList.toString(),Toast.LENGTH_LONG).show();
+                //Toast.makeText(getApplicationContext(),resultList.toString(),Toast.LENGTH_LONG).show();
                 mAnswerCount=0;
                 showQuestions();
                 count=count +1;
-                mA.setBackgroundColor(getResources().getColor(R.color.colorSilver));
-                mB.setBackgroundColor(getResources().getColor(R.color.colorSilver));
-                mC.setBackgroundColor(getResources().getColor(R.color.colorSilver));
-                mD.setBackgroundColor(getResources().getColor(R.color.colorSilver));
+                mA.setBackgroundColor(getResources().getColor(R.color.colorLiteBlue));
+                mB.setBackgroundColor(getResources().getColor(R.color.colorLiteBlue));
+                mC.setBackgroundColor(getResources().getColor(R.color.colorLiteBlue));
+                mD.setBackgroundColor(getResources().getColor(R.color.colorLiteBlue));
 
                 break;
             case R.id.buttonSubmit:
@@ -167,14 +172,14 @@ public class MainActivity extends AppCompatActivity  implements View.OnClickList
                     resultList.add(list1);
                 }
 
-                Toast.makeText(getApplicationContext(),resultList.toString(),Toast.LENGTH_LONG).show();
+                //Toast.makeText(getApplicationContext(),resultList.toString(),Toast.LENGTH_LONG).show();
                 mAnswerCount=0;
                 showQuestions();
                 count=count +1;
-                mA.setBackgroundColor(getResources().getColor(R.color.colorSilver));
-                mB.setBackgroundColor(getResources().getColor(R.color.colorSilver));
-                mC.setBackgroundColor(getResources().getColor(R.color.colorSilver));
-                mD.setBackgroundColor(getResources().getColor(R.color.colorSilver));
+                mA.setBackgroundColor(getResources().getColor(R.color.colorLiteBlue));
+                mB.setBackgroundColor(getResources().getColor(R.color.colorLiteBlue));
+                mC.setBackgroundColor(getResources().getColor(R.color.colorLiteBlue));
+                mD.setBackgroundColor(getResources().getColor(R.color.colorLiteBlue));
 
                 for(ModelList user1 : arrList) {
                     for(ModelList user2 : resultList) {
@@ -187,36 +192,56 @@ public class MainActivity extends AppCompatActivity  implements View.OnClickList
                         }
                     }
                 }
-                Toast.makeText(getApplicationContext(),"result is ?",Toast.LENGTH_LONG).show();
-                Toast.makeText(getApplicationContext(),String.valueOf(countList.size()),Toast.LENGTH_LONG).show();
+              final  AlertDialog.Builder builder =new AlertDialog.Builder(this);
+                builder.setTitle("Result is");
+                builder.setCancelable(false);
+                builder.setMessage("Correct Answers:- "+String.valueOf(countList.size())+"\n"+ " Wrong Answers:- "+ String.valueOf(arrList.size()- countList.size())+ "\n Percentage is :- " + String.valueOf((countList.size()*100)/arrList.size()));
+                builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Intent intent =new Intent(MainActivity.this,Main2Activity.class);
+                        startActivity(intent);
+                        mNext.setVisibility(View.VISIBLE);
+                        mSubmit.setVisibility(View.GONE);
+                        mQuestion.setText("");
+                        mA.setText("");
+                        mB.setText("");
+                        mC.setText("");
+                        mD.setText("");
+                        finish();
+                    }
+                });
+                builder.show();
+                //Toast.makeText(getApplicationContext(),"result is ?",Toast.LENGTH_LONG).show();
+                //Toast.makeText(getApplicationContext(),String.valueOf(countList.size()),Toast.LENGTH_LONG).show();
 
                 break;
             case R.id.textViewOptionA:
                 mAnswerCount =1;
                 mA.setBackgroundColor(getResources().getColor(R.color.colorWhite));
-                mB.setBackgroundColor(getResources().getColor(R.color.colorSilver));
-                mC.setBackgroundColor(getResources().getColor(R.color.colorSilver));
-                mD.setBackgroundColor(getResources().getColor(R.color.colorSilver));
+                mB.setBackgroundColor(getResources().getColor(R.color.colorLiteBlue));
+                mC.setBackgroundColor(getResources().getColor(R.color.colorLiteBlue));
+                mD.setBackgroundColor(getResources().getColor(R.color.colorLiteBlue));
                 break;
             case R.id.textViewOptionB:
                 mAnswerCount=2;
-                mA.setBackgroundColor(getResources().getColor(R.color.colorSilver));
+                mA.setBackgroundColor(getResources().getColor(R.color.colorLiteBlue));
                 mB.setBackgroundColor(getResources().getColor(R.color.colorWhite));
-                mC.setBackgroundColor(getResources().getColor(R.color.colorSilver));
-                mD.setBackgroundColor(getResources().getColor(R.color.colorSilver));
+                mC.setBackgroundColor(getResources().getColor(R.color.colorLiteBlue));
+                mD.setBackgroundColor(getResources().getColor(R.color.colorLiteBlue));
                 break;
             case R.id.textViewOptionC:
                 mAnswerCount=3;
-                mA.setBackgroundColor(getResources().getColor(R.color.colorSilver));
-                mB.setBackgroundColor(getResources().getColor(R.color.colorSilver));
+                mA.setBackgroundColor(getResources().getColor(R.color.colorLiteBlue));
+                mB.setBackgroundColor(getResources().getColor(R.color.colorLiteBlue));
                 mC.setBackgroundColor(getResources().getColor(R.color.colorWhite));
-                mD.setBackgroundColor(getResources().getColor(R.color.colorSilver));
+                mD.setBackgroundColor(getResources().getColor(R.color.colorLiteBlue));
                 break;
             case R.id.textViewOptionD:
                 mAnswerCount =4;
-                mA.setBackgroundColor(getResources().getColor(R.color.colorSilver));
-                mB.setBackgroundColor(getResources().getColor(R.color.colorSilver));
-                mC.setBackgroundColor(getResources().getColor(R.color.colorSilver));
+                mA.setBackgroundColor(getResources().getColor(R.color.colorLiteBlue));
+                mB.setBackgroundColor(getResources().getColor(R.color.colorLiteBlue));
+                mC.setBackgroundColor(getResources().getColor(R.color.colorLiteBlue));
                 mD.setBackgroundColor(getResources().getColor(R.color.colorWhite));
                 break;
         }
