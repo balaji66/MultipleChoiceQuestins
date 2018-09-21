@@ -16,36 +16,32 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity  implements View.OnClickListener{
     private TextView mQuestion, mA, mB, mC, mD;
     private Button mNext, mSubmit;
-    public List<ModelList> arrList;
+    //This list is for storing the Static array list items.
+    public List<ModelList> defaultList = new ArrayList<>();;
+    //This list is for storing the Answered questions.
     public static List<ModelList> resultList =new ArrayList<>();
     public int count=0;
     public int mAnswerCount;
+    //This list for storing the correct answers count.
     public List<ModelList> countList =new ArrayList<>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        arrList =new ArrayList<>();
         initializeViews();
+        initializeListeners();
         count=1;
         mAnswerCount=0;
-        addItemsToList();
-        initializeListeners();
-        ModelList item =arrList.get(0);
-        mQuestion.setText(item.getmQuestion());
         resultList.clear();
         countList.clear();
+        addItemsToDefaultList();
+        //Here we are loading the first record from the list At the time of onCreate.
+        ModelList item =defaultList.get(0);
+        mQuestion.setText(item.getmQuestion());
         mA.setText(item.getmOption_A());
         mB.setText(item.getmOption_B());
         mC.setText(item.getmOption_C());
         mD.setText(item.getmOption_D());
-        mA.setBackgroundColor(getResources().getColor(R.color.colorLiteBlue));
-        mB.setBackgroundColor(getResources().getColor(R.color.colorLiteBlue));
-        mC.setBackgroundColor(getResources().getColor(R.color.colorLiteBlue));
-        mD.setBackgroundColor(getResources().getColor(R.color.colorLiteBlue));
-        mSubmit.setVisibility(View.GONE);
-        mNext.setVisibility(View.VISIBLE);
-        //Toast.makeText(getApplicationContext(),String.valueOf(arrList.size()),Toast.LENGTH_LONG).show();
     }
     public void initializeViews() {
         mQuestion =findViewById(R.id.textViewQuestion);
@@ -64,19 +60,21 @@ public class MainActivity extends AppCompatActivity  implements View.OnClickList
         mC.setOnClickListener(this);
         mD.setOnClickListener(this);
     }
-    public void addItemsToList()
-    {
-        //ArrayList<ModelList> arrList =new ArrayList<>();
-        arrList.add(0, new ModelList("Whats Your Country ?","India","US", "Japan","China","India"));
-        arrList.add(1, new ModelList("Whats Your State ?","Karnataka ","Andhra Pradesh", "Maharastra","Kerala","Andhra Pradesh"));
-        arrList.add(2, new ModelList("Whats Your Qualification ?","BCA","BSC", "CA","MCA","MCA"));
-        arrList.add(3, new ModelList("Whats Your Mother Tongue ?","Kanada ","Telugu", "Tamil","Bhojpuri","Telugu"));
-        arrList.add(4, new ModelList("Whats Your Mother Tongue ?","Telugu ","Kanada", "Tamil","Bhojpuri","Kanada"));
+
+    /**
+     * This method is for adding the static items to array list.
+     */
+    public void addItemsToDefaultList() {
+        defaultList.add(0, new ModelList("Whats Your Country ?","India","US", "Japan","China","India"));
+        defaultList.add(1, new ModelList("Whats Your State ?","Karnataka ","Andhra Pradesh", "Maharastra","Kerala","Andhra Pradesh"));
+        defaultList.add(2, new ModelList("Whats Your Qualification ?","BCA","BSC", "CA","MCA","MCA"));
+        defaultList.add(3, new ModelList("Whats Your Mother Tongue ?","Kanada ","Telugu", "Tamil","Bhojpuri","Telugu"));
+        defaultList.add(4, new ModelList("Whats Your Mother Tongue ?","Telugu ","Kanada", "Tamil","Bhojpuri","Kanada"));
 
     }
     public void showQuestions()
     {
-        int size  =arrList.size();
+        int size  =defaultList.size();
             for(int i=1; i<size && count<size; i++)
             {
                 if(count == size-1)
@@ -84,7 +82,7 @@ public class MainActivity extends AppCompatActivity  implements View.OnClickList
                     mSubmit.setVisibility(View.VISIBLE);
                     mNext.setVisibility(View.GONE);
                 }
-                ModelList item =arrList.get(count);
+                ModelList item =defaultList.get(count);
                 mQuestion.setText(item.getmQuestion());
                 mA.setText(item.getmOption_A());
                 mB.setText(item.getmOption_B());
@@ -98,6 +96,7 @@ public class MainActivity extends AppCompatActivity  implements View.OnClickList
     public void onClick(View v) {
         switch (v.getId())
         {
+            //This case is for showing the next question.
             case R.id.buttonNext:
                 ModelList list =new ModelList();
                 list.setmQuestion(mQuestion.getText().toString());
@@ -130,7 +129,6 @@ public class MainActivity extends AppCompatActivity  implements View.OnClickList
                     resultList.add(list);
                 }
 
-                //Toast.makeText(getApplicationContext(),resultList.toString(),Toast.LENGTH_LONG).show();
                 mAnswerCount=0;
                 showQuestions();
                 count=count +1;
@@ -140,6 +138,7 @@ public class MainActivity extends AppCompatActivity  implements View.OnClickList
                 mD.setBackgroundColor(getResources().getColor(R.color.colorLiteBlue));
 
                 break;
+                //This case is for calculating the result.
             case R.id.buttonSubmit:
                 ModelList list1 =new ModelList();
                 list1.setmQuestion(mQuestion.getText().toString());
@@ -149,7 +148,6 @@ public class MainActivity extends AppCompatActivity  implements View.OnClickList
                 list1.setmOption_D("");
                 if(mAnswerCount == 1)
                 {
-
                     list1.setmAnswer(mA.getText().toString());
                     resultList.add(list1);
                 }
@@ -181,7 +179,9 @@ public class MainActivity extends AppCompatActivity  implements View.OnClickList
                 mC.setBackgroundColor(getResources().getColor(R.color.colorLiteBlue));
                 mD.setBackgroundColor(getResources().getColor(R.color.colorLiteBlue));
 
-                for(ModelList user1 : arrList) {
+                //Here we are comparing the two lists.
+                //Whether selected answers are correct or not we are comparing here.
+                for(ModelList user1 : defaultList) {
                     for(ModelList user2 : resultList) {
                         if(user1.getmQuestion().equals(user2.getmQuestion())) {
                             if(user1.getmAnswer().equals(user2.getmAnswer())) {
@@ -195,7 +195,7 @@ public class MainActivity extends AppCompatActivity  implements View.OnClickList
               final  AlertDialog.Builder builder =new AlertDialog.Builder(this);
                 builder.setTitle("Result is");
                 builder.setCancelable(false);
-                builder.setMessage("Correct Answers:- "+String.valueOf(countList.size())+"\n"+ " Wrong Answers:- "+ String.valueOf(arrList.size()- countList.size())+ "\n Percentage is :- " + String.valueOf((countList.size()*100)/arrList.size()));
+                builder.setMessage("Correct Answers:- "+String.valueOf(countList.size())+"\n"+ " Wrong Answers:- "+ String.valueOf(defaultList.size()- countList.size())+ "\n Percentage is :- " + String.valueOf((countList.size()*100)/defaultList.size()));
                 builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -212,10 +212,11 @@ public class MainActivity extends AppCompatActivity  implements View.OnClickList
                     }
                 });
                 builder.show();
-                //Toast.makeText(getApplicationContext(),"result is ?",Toast.LENGTH_LONG).show();
-                //Toast.makeText(getApplicationContext(),String.valueOf(countList.size()),Toast.LENGTH_LONG).show();
-
                 break;
+
+                //Here we are showing selected answering the white color remaining all are same color.
+                // For knowing the selected answer we are maintaining the mAnswerCount.
+                //mAnswerCount is default value is 0.
             case R.id.textViewOptionA:
                 mAnswerCount =1;
                 mA.setBackgroundColor(getResources().getColor(R.color.colorWhite));
