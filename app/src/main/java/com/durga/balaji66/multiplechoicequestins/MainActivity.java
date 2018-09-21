@@ -66,10 +66,10 @@ public class MainActivity extends AppCompatActivity  implements View.OnClickList
      */
     public void addItemsToDefaultList() {
         defaultList.add(0, new ModelList("Whats Your Country ?","India","US", "Japan","China","India"));
-        defaultList.add(1, new ModelList("Whats Your State ?","Karnataka ","Andhra Pradesh", "Maharastra","Kerala","Andhra Pradesh"));
+        defaultList.add(1, new ModelList("Whats Your State ?","Karnataka ","Andhra Pradesh", "Maharastra","Kerala","Kerala"));
         defaultList.add(2, new ModelList("Whats Your Qualification ?","BCA","BSC", "CA","MCA","MCA"));
         defaultList.add(3, new ModelList("Whats Your Mother Tongue ?","Kanada ","Telugu", "Tamil","Bhojpuri","Telugu"));
-        defaultList.add(4, new ModelList("Whats Your Mother Tongue ?","Telugu ","Kanada", "Tamil","Bhojpuri","Kanada"));
+        defaultList.add(4, new ModelList("Whats the Capital of India  ?","Bangalore ","Hyderabad", "Delhi","Bihar","Delhi"));
 
     }
     public void showQuestions()
@@ -192,26 +192,12 @@ public class MainActivity extends AppCompatActivity  implements View.OnClickList
                         }
                     }
                 }
-              final  AlertDialog.Builder builder =new AlertDialog.Builder(this);
-                builder.setTitle("Result is");
-                builder.setCancelable(false);
-                builder.setMessage("Correct Answers:- "+String.valueOf(countList.size())+"\n"+ " Wrong Answers:- "+ String.valueOf(defaultList.size()- countList.size())+ "\n Percentage is :- " + String.valueOf((countList.size()*100)/defaultList.size()));
-                builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        Intent intent =new Intent(MainActivity.this,Main2Activity.class);
-                        startActivity(intent);
-                        mNext.setVisibility(View.VISIBLE);
-                        mSubmit.setVisibility(View.GONE);
-                        mQuestion.setText("");
-                        mA.setText("");
-                        mB.setText("");
-                        mC.setText("");
-                        mD.setText("");
-                        finish();
-                    }
-                });
-                builder.show();
+                Intent intent =new Intent(MainActivity.this,Main2Activity.class);
+                intent.putExtra("Correct",String.valueOf(countList.size()));
+                intent.putExtra("Wrong",String.valueOf(defaultList.size()- countList.size()));
+                intent.putExtra("Percentage",String.valueOf((countList.size()*100)/defaultList.size()));
+                startActivity(intent);
+
                 break;
 
                 //Here we are showing selected answering the white color remaining all are same color.
